@@ -10,7 +10,7 @@ def search_intra_asia(request):
     df['Distance'] = df['Distance'].astype(int)
     include_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines', 'Brunei', 'Myanmar']
     pattern = '|'.join(include_countries)
-    df = df[(df['From'].str.contains(pattern)) & (df['To'].str.contains(pattern)) & (df['Distance'] <= 1500)]
+    df = df[(df['From'].str.contains(pattern)) & (df['To'].str.contains(pattern))]
     all_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines']
     all_countries.sort()
 
