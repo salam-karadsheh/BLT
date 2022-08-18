@@ -95,7 +95,7 @@ def test(request):
         found = True
         routes_found = all_calculations(distance_df)
     route = str(starting_country).title() + temp + temp_two
-    return render(request, 'test.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
+    return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
 def routes(request):
     df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
@@ -118,45 +118,6 @@ def routes(request):
         routes_found = distance_df.values.tolist
     route = str(country_from).title() + temp
     return render(request, 'routes.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
-
-def search_two(request):
-    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
-    df['Distance'] = df['Distance'].astype(int)
-    all_countries = df['From'].unique()
-    starting_point = request.GET.get('starting_point')
-    ending_point = request.GET.get('ending_point')
-    avg_speed = request.GET.get('avg_speed')
-    if (request.GET.get('starting_point') is None) & (request.GET.get('ending_point') is None):
-        route = ""
-        distance = ""
-        ptp_time = ""
-        dtd_time = ""
-    else:
-        distance_df = df['Distance'][(df['From'].str.contains(str(starting_point))) & (df['To'].str.contains(str(ending_point)))]
-        if distance_df.empty:
-            distance = 'Route Not Available'
-            ptp_time = 'Route Not Available'
-            dtd_time = 'Route Not Available'
-        else:
-            distance = distance_df.values[0]
-            if avg_speed == "":
-                ptp_time = "Enter Speed"
-                dtd_time = "Enter Speed"
-            else:
-                ptp_time = (round(float(distance) / float(avg_speed), 1))
-                dtd_time = ptp_time + 24
-                if ptp_time > 23.9:
-                    ptp_time = str(round(ptp_time / 24.0, 1)) + " Days"
-                else:
-                    ptp_time = str(round(ptp_time, 1)) + " Hours"
-                if dtd_time > 23.9:
-                    dtd_time = str(round(dtd_time / 24.0, 1)) + " Days"
-                else:
-                    dtd_time = str(round(dtd_time, 1)) + " Hours"
-        route = str(starting_point) + " to " + str(ending_point)
-
-    return render(request, 'search.html', {'countries' : all_countries, 'distance' : distance, 
-                                            'route' : route, 'ptp_time' : ptp_time, 'dtd_time' : dtd_time})
 
 def all_calculations(df_temp):
     new_list = []    
