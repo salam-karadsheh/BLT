@@ -43,10 +43,10 @@
         <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
         <button class="primary" type="submit">Search</button>
     </form>
-    <br>
     {% if found %}
         <br>
         <h3>Routes from {{route}}</h3>
+            <br>
             {% for value in routes_found %}
             <div class="container">
                 <h5>
