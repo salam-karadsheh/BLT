@@ -43,7 +43,7 @@ def search_intra_asia(request):
     route = str(starting_country).title() + temp + temp_two
     return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
-def test(request):
+def search_global(request):
     #All Routes
     df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
