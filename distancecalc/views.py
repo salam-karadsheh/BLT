@@ -6,7 +6,7 @@ import pandas as pd
 
 def search_intra_asia(request):
     #Intra-Asia Routes
-    df = pd.read_csv('blt/distances.csv')
+    df = pd.read_csv('/static/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
     include_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines', 'Brunei', 'Myanmar']
     pattern = '|'.join(include_countries)
@@ -45,7 +45,7 @@ def search_intra_asia(request):
 
 def test(request):
     #All Routes
-    df = pd.read_csv('blt/distances.csv')
+    df = pd.read_csv('/static/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
 
     all_countries = ['Alaska','Albania','Algeria','American Samoa','Andaman Islands','Angola','Antigua','Argentina','Aruba','Ascension Island','Australia','Azores',
@@ -98,7 +98,7 @@ def test(request):
     return render(request, 'test.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
 def routes(request):
-    df = pd.read_csv('blt/distances.csv')
+    df = pd.read_csv('/static/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
     all_countries = df['From'].unique()
     all_countries.sort()
@@ -120,7 +120,7 @@ def routes(request):
     return render(request, 'routes.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
 def search_two(request):
-    df = pd.read_csv('blt/distances.csv')
+    df = pd.read_csv('/static/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
     all_countries = df['From'].unique()
     starting_point = request.GET.get('starting_point')
