@@ -1,0 +1,64 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title>Port-to-Port Distance Calculator</title>
+    
+    <style>
+        img {position: absolute;top: 0px;right: 0px;}
+        h1 {text-align: center;}
+        h2 {text-align: center;}
+        h3 {text-align: center;}
+        form {text-align: center;}
+        table { margin-left: auto; margin-right: auto;}
+        div {text-align: center;}
+        .form-control-one {width: 15rem; height: 2rem;}  
+        .form-control-two {width: 15rem; height: 2rem;}  
+        table { margin-left: auto; margin-right: auto;}
+        tr {text-align: center;}
+        table, th, td {border: 1px solid black; border-collapse: collapse;}
+    </style>
+</head>
+
+<body style="background-color:#ADD8E6;">
+    <h1>Example Routes</h1>
+    {% load static %}
+
+    <img style="width: 390px; height: 100px;" src="{% static 'images/logo.png' %}" alt="My image">
+    <h2><a class="btn btn-primary" href="/test">All Routes</a></h2>    
+    <h2><a class="btn btn-primary" href="/">Intra-Asia Routes</a></h2>
+    <form method="GET" action=".">
+        <form method="GET" action=".">
+            <input class="form-control-one" type="search" placeholder="All Routes Starting From" name="country_from" size="30" list="countries">
+                <datalist id="countries">
+                    {% for result in countries %}
+                        <option value="{{ result}}">
+                    {% endfor %}
+                </datalist>
+            <input class="form-control-two" type="search" pattern="\d*"  placeholder="Within the Range (NM)"  name="within_range" size="30" >
+            <button class="primary" type="submit">Search</button>
+        </form>
+    </form>
+    <h2>
+        <table class="center">
+            {% if found %}
+            <h3>Routes from {{route}}</h3>
+            <tr>
+               <th style="font-size:20px">&nbsp;From&nbsp;</th>
+               <th style="font-size:20px">&nbsp;To&nbsp;</th>
+               <th style="font-size:20px">&nbsp;Distance (NM)&nbsp;</th>
+            </tr>
+                {% for value in routes_found %}
+                <tr>
+                    {% for item in value %}
+                        <td style = "font-size: 18px;">&nbsp;&nbsp;&nbsp;{{item}}&nbsp;&nbsp;&nbsp;</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </h2>
+</body>
+

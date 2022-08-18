@@ -1,0 +1,65 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title>Port-to-Port Distance Calculator</title>
+    
+    <style>
+        img {position: absolute;top: 0px;right: 0px;}
+        h1 {text-align: center;}
+        h2 {text-align: center;}
+        h3 {text-align: center;}
+        form {text-align: center;}
+        table { margin-left: auto; margin-right: auto;}
+        div {text-align: center;}
+        .form-control-one {width: 15rem; height: 2rem;}  
+        .form-control-two {width: 15rem; height: 2rem;}  
+        .form-control-three {width: 17rem; height: 2rem;}  
+    </style>
+</head>
+<body style="background-color:#ADD8E6;">
+    <h1>All Routes</h1>
+    {% load static %}
+    <h2><a class="btn btn-primary" href="/routes">Routes Within a Range</a></h2>
+    <h2><a class="btn btn-primary" href="/">Intra-Asia Routes</a></h2>
+    <img style="width: 390px; height: 100px;" src="{% static 'images/logo.png' %}" alt="My image">
+    <form method="GET" action=".">
+        <input class="form-control-one" type="search" placeholder="Starting Country" name="starting_country" size="30" list="countries">
+            <datalist id="countries">
+                {% for result in countries %}
+                    <option value="{{ result}}">
+                {% endfor %}
+            </datalist>
+        <input class="form-control-two" type="search" placeholder="Ending Country" name="ending_country" size="30" list ="countries" >
+            <datalist id="countries">
+                {% for result in countries %}
+                    <option value="{{ result}}">
+                {% endfor %}
+            </datalist>
+        <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
+        <button class="primary" type="submit">Search</button>
+    </form>
+    {% if found %}
+        <h3>Routes from {{route}}</h3>
+            {% for value in routes_found %}
+            <div class="container">
+                <h5>
+                    <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo{{ forloop.counter }}">{{value.0}}</button>
+                    <div id="demo{{ forloop.counter}}" class="collapse">
+                        <br>
+                        <h5>Distance (NM): <span style="color: #000080"> {{ value.1 }} </span> </h5>
+                        <h5>Port-to-Port Transit Time: <span style="color: #000080"> {{ value.2 }} </h5>
+                        <h5>Door-to-Door Transit Time: <span style="color: #000080"> {{ value.3 }} </h5>
+                        <h5>Fuel Consumption (kg): <span style="color: #000080"> {{ value.4 }} </h5>
+                        <h5>ARGO Cost ($/kg): <span style="color: #000080"> {{ value.5 }} </h5>
+                        <h5>ARGO Price ($/kg): <span style="color: #000080"> {{ value.6 }} </h5>
+                        <br>
+                    </div>
+                </h5>
+            </div>
+            {% endfor %}
+    {% endif %}
+</body>
+
