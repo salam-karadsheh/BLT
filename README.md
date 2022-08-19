@@ -9,6 +9,17 @@ Instructions for how to navigate the web application are provided below:
 - Tool #3 "Routes within a Range": Provides a list of available routes from a specified origin point with the option to filter routes within a certain range. Simply type in the origin point and click search to display a table of all the routes starting from this origin point including their distances. 
 
 Assumptions: 
-- Breakdown of Port-to-Port transit time calculation:
+- Breakdown of Port-to-Port transit time calculations:
   - All routes involving Singapore must take into account the 12 knots speed limit for 7 NM within the Singaporean Strait.
-  - All routes must take into account 'slow speed zones' in which the vessel travels at an average speed of [5] knots
+  - All routes under [150] NM must take into account 'slow speed zones' in which the vessel travels at an average speed of [5] knots for [6] NM.
+  - All routes over [150] NM must take into account 'slow speed zones' in which the vessel travels at an average speed of [5] knots for [3] NM. 
+  - The vessel is assumed to travel at its cruise speed of 40 knots for the remainder of the trip. 
+
+- Breakdown of Door-to-Door transit time calculations:
+  - Loading [20] TEU containers takes [1.5] mins each. 
+  - Unloading [20] TEU containers takes [1.5] mins each. 
+  - Docking takes [20] mins. 
+  - Undocking takes [20] mins.
+  - Trucking time to origin port takes [3] hours.
+  - Trucking time from destination port take [3] hours.
+  - Additional wait time of [2.5] hours at each port.
