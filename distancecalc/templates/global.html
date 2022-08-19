@@ -20,29 +20,39 @@
     </style>
 </head>
 <body>
-    <br>
-    <h1>BLT Route Calculator</h1>
-    <h2><a class="btn btn-primary" href="/routes">Routes Within a Range</a> <a class="btn btn-primary" href="/asia">Intra-Asia Routes</a></h2>
-    <h3>All Routes</h3>
-    <br>
-    {% load static %}
-    <img style="width: 320px;" src="https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distancecalc/static/images/logo.png" alt="My image">
-    <form method="GET" action=".">
-        <input class="form-control-one" type="search" placeholder="Starting Country" name="starting_country" size="30" list="countries">
-            <datalist id="countries">
-                {% for result in countries %}
-                    <option value="{{ result}}">
-                {% endfor %}
-            </datalist>
-        <input class="form-control-two" type="search" placeholder="Ending Country" name="ending_country" size="30" list ="countries" >
-            <datalist id="countries">
-                {% for result in countries %}
-                    <option value="{{ result}}">
-                {% endfor %}
-            </datalist>
-        <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
-        <button class="primary" type="submit">Search</button>
-    </form>
+    <div>
+        <br>
+        <h1>BLT Route Calculator</h1>
+        <h2><a class="btn btn-primary" href="/routes">Routes Within a Range</a> <a class="btn btn-primary" href="/asia">Intra-Asia Routes</a></h2>
+        <h3>All Routes</h3>
+        <br>
+        {% load static %}
+        <img style="width: 320px;" src="https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distancecalc/static/images/logo.png" alt="My image">
+        <form method="GET" action=".">
+            <tr>
+                <input class="form-control-one" type="search" placeholder="Starting Country" name="starting_country" size="30" list="countries">
+                    <datalist id="countries">
+                        {% for result in countries %}
+                            <option value="{{ result}}">
+                        {% endfor %}
+                    </datalist>
+                <input class="form-control-two" type="search" placeholder="Ending Country" name="ending_country" size="30" list ="countries" >
+                    <datalist id="countries">
+                        {% for result in countries %}
+                            <option value="{{ result}}">
+                        {% endfor %}
+                    </datalist>
+            </tr>
+            <br>
+            <br>
+            <tr>
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Air Freight Rate ($/kg) - Optional"  name="air_freight_rate" size="30" >
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Freight Volume (tons) - Optional"  name="freight_volume" size="30" >
+            </tr>
+            <button class="primary" type="submit">Search</button>
+        </form>
+    </div>
     {% if found %}
         <br>
         <h3>Routes from {{route}}</h3>
@@ -59,6 +69,12 @@
                         <h5>Fuel Consumption (tons): <span style="color: #000080"> {{ value.4 }} </h5>
                         <h5>ARGO Cost ($/kg): <span style="color: #000080"> {{ value.5 }} </h5>
                         <h5>ARGO Price ($/kg): <span style="color: #000080"> {{ value.6 }} </h5>
+                        {% if volume %}
+                            <h5>CO2 Emissions Savings (tons): <span style="color: #000080"> {{ value.7 }} </h5>
+                        {% endif %}
+                        {% if air %}
+                            <h5>Freight Savings ($/ton): <span style="color: #000080"> {{ value.8 }} </h5>   
+                        {% endif %}                            
                         <br>
                     </div>
                 </h5>
