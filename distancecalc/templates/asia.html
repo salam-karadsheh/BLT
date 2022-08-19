@@ -28,19 +28,27 @@
         {% load static %}
         <img style="width: 320px;" src="https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distancecalc/static/images/logo.png" alt="My image">
         <form method="GET" action=".">
-            <input class="form-control-one" type="search" placeholder="Starting Country" name="starting_country" size="30" list="countries">
-                <datalist id="countries">
-                    {% for result in countries %}
-                        <option value="{{ result}}">
-                    {% endfor %}
-                </datalist>
-            <input class="form-control-two" type="search" placeholder="Ending Country" name="ending_country" size="30" list ="countries" >
-                <datalist id="countries">
-                    {% for result in countries %}
-                        <option value="{{ result}}">
-                    {% endfor %}
-                </datalist>
-            <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
+            <tr>
+                <input class="form-control-one" type="search" placeholder="Starting Country" name="starting_country" size="30" list="countries">
+                    <datalist id="countries">
+                        {% for result in countries %}
+                            <option value="{{ result}}">
+                        {% endfor %}
+                    </datalist>
+                <input class="form-control-two" type="search" placeholder="Ending Country" name="ending_country" size="30" list ="countries" >
+                    <datalist id="countries">
+                        {% for result in countries %}
+                            <option value="{{ result}}">
+                        {% endfor %}
+                    </datalist>
+            </tr>
+            <br>
+            <br>
+            <tr>
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Air Freight Rate ($/kg) - Optional"  name="air_freight_rate" size="30" >
+                <input class="form-control-three" type="search" pattern="\d*" placeholder="Freight Volume (tons) - Optional"  name="freight_volume" size="30" >
+            </tr>
             <button class="primary" type="submit">Search</button>
         </form>
     </div>
