@@ -287,7 +287,7 @@ def all_calculations(df_temp):
         freight_cost_per_kg = (fixed_cost_per_trip + fuel_costs + cargo_handling + port_costs) / payload
         
         #ARGO freight price per kg ($ / kg)
-        freight_price_per_kg = cost_per_kg * (0.6)
+        freight_price_per_kg = freight_cost_per_kg / 0.6
 
         #Formatting
         fuel_consumption = int(fuel_consumption)
