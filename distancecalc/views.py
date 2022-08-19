@@ -291,8 +291,8 @@ def all_calculations(df_temp):
 
         #Formatting
         fuel_consumption = int(fuel_consumption)
-        cost_per_kg = round(cost_per_kg, 2)
-        price_per_kg = round(price_per_kg, 2)
+        freight_cost_per_kg = round(freight_cost_per_kg, 2)
+        freight_price_per_kg = round(freight_price_per_kg, 2)
         #Displaying transit time in days vs hours
         if ptp_time_days > 1.0:
             ptp_time = str(round(ptp_time_days, 1)) + " Days"
