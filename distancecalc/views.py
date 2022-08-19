@@ -4,7 +4,7 @@ import pandas as pd
 #This view function handles the intra-asia route calculator
 def search_intra_asia(request):
     #Load the entire dataset from distance.csv file
-    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
+    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
     
     #Filter the dataset to only include intra-Asia routes involving the following countries
@@ -62,7 +62,7 @@ def search_intra_asia(request):
 #This view function handles all the routes
 def search_global(request):
     #Load the entire dataset from distance.csv file
-    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
+    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
 
     #List of all the countries in the dataset (parsed) to display in the dropdown search bars
@@ -135,7 +135,7 @@ def search_global(request):
 #This view function handles the 'all routes within a given range' tool
 def routes(request):
     #Load the entire dataset from distance.csv file
-    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
+    df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT-Route-Calculator/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
     #Get all the unique origins for the dropdown search bar options
     all_countries = df['From'].unique()
