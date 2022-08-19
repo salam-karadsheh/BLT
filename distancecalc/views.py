@@ -85,6 +85,7 @@ def search_intra_asia(request):
                 freight_input = "Freight Volume is " + str(freight_volume) + " (tons)"
         else:
             routes_found = all_calculations(distance_df, None, None)
+            air = False
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
     return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume, 'freight_input' : freight_input})
@@ -188,6 +189,7 @@ def search_global(request):
                 freight_input = "Freight Volume is " + str(freight_volume) + " (tons)"
         else:
             routes_found = all_calculations(distance_df, None, None)
+            air = False
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
     return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume, 'freight_input' : freight_input})
