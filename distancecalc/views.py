@@ -347,7 +347,7 @@ def all_calculations(df_temp, air_freight_rate, freight_volume):
         
         #Boolean variables to denote whether the freight savings and emissions savings are calculated
         air = False
-        volume = True
+        volume = False
 
         if freight_volume != None:
             volume = True
