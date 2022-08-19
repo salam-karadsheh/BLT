@@ -1,53 +1,71 @@
 from django.shortcuts import render
 import pandas as pd
 
-# Create your views here.
-# request handle - action
-
+#This view function handles the intra-asia route calculator
 def search_intra_asia(request):
-    #Intra-Asia Routes
+    #Load the entire dataset from distance.csv file
     df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
-    include_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines', 'Brunei', 'Myanmar']
+    
+    #Filter the dataset to only include intra-Asia routes involving the following countries
+    include_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines']
     pattern = '|'.join(include_countries)
     df = df[(df['From'].str.contains(pattern)) & (df['To'].str.contains(pattern))]
     all_countries = ['Thailand', 'Indonesia', 'Singapore', 'South Korea', 'Hong Kong', 'Malaysia', 'Sarawak', 'Taiwan', 'China', 'Japan', 'Vietnam', 'Philippines']
     all_countries.sort()
 
-    #request handling
+    #Request handling
     starting_country = request.GET.get('starting_country')
     ending_country = request.GET.get('ending_country')
     within_range = request.GET.get('within_range')
-
+    
+    #This boolean variable is True if any results were found and False otherwise
     found = False
     temp = ""
     temp_two = ""
+    
+    #Handles the case when the Ending Country is not specified
     if (ending_country == "") | (ending_country == None):
+        #Handles the case when the range is not specified
         if (within_range == "") | (within_range == None):
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False))].sort_values(['From', 'To'])
+        #Handles the case when the range is specified
         else:
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False)) & (df['Distance'] <= float(within_range))].sort_values(['From', 'To'])
+            #String to display the specified range
             temp_two = " within " + str(within_range) + " NM"
+    #Handles the case when the Ending Country is specified 
     else: 
+        #Handles the case when the range is not specified
         if (within_range == "") | (within_range == None):
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False))].sort_values(['From', 'To'])
+        #Handles the case when the range is specified
         else:
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False)) & (df['Distance'] <= float(within_range))].sort_values(['From', 'To'])
+            #String to display the specified range
             temp_two = " within " + str(within_range) + " NM"
+        #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
+    
+    #Handles the case when there are no routes found
     if distance_df.empty:
         routes_found = []
+    #Handles the case when there are routes found
     else:
         found = True
+        #Calls the function to retrieve all the calculations necessary to be displayed
         routes_found = all_calculations(distance_df)
+    #String to display the full route
     route = str(starting_country).title() + temp + temp_two
     return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
+#This view function handles all the routes
 def search_global(request):
-    #All Routes
+    #Load the entire dataset from distance.csv file
     df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
 
+    #List of all the countries in the dataset (parsed) to display in the dropdown search bars
     all_countries = ['Alaska','Albania','Algeria','American Samoa','Andaman Islands','Angola','Antigua','Argentina','Aruba','Ascension Island','Australia','Azores',
     'Bahamas','Bahrain','Baker Island','Balearic Islands','Bangladesh','Barbados','Belgium','Belize','Benin','Bermuda','Bjornoya Island','Bonaire','Bonin Islands',
     'Brazil','British Honduras','Bulgaria','Burma','Cabinda','Cambodia','Cameroon','Canada','Canary Islands','Cape Verde Islands','Caroline Islands','Cayman Islands',
@@ -69,152 +87,221 @@ def search_global(request):
     'Virgin Islands','Wake Island','Wales','Western Sahara','Yemen','Yucatan Channel']
     all_countries.sort()
 
-    #request handling
+    #Request handling
     starting_country = request.GET.get('starting_country')
     ending_country = request.GET.get('ending_country')
     within_range = request.GET.get('within_range')
+    
+    #This boolean variable is True if any results were found and False otherwise
     found = False
     temp = ""
     temp_two = ""
+    
+    #Handles the case when the Ending Country is not specified
     if (ending_country == "") | (ending_country == None):
+        #Handles the case when the range is not specified
         if (within_range == "") | (within_range == None):
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False))].sort_values(['From', 'To'])
+        #Handles the case when the range is specified
         else:
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False)) & (df['Distance'] <= float(within_range))].sort_values(['From', 'To'])
+            #String to display the specified range
             temp_two = " within " + str(within_range) + " NM"
+    #Handles the case when the Ending Country is specified
     else: 
+        #Handles the case when the range is not specified
         if (within_range == "") | (within_range == None):
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False))].sort_values(['From', 'To'])
+        #Handles the case when the range is specified
         else:
             distance_df = df[(df['From'].str.contains(str(starting_country), case = False)) & (df['To'].str.contains(str(ending_country), case = False)) & (df['Distance'] <= float(within_range))].sort_values(['From', 'To'])
+            #String to display the specified range
             temp_two = " within " + str(within_range) + " NM"
+        #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
+    
+    #Handles the case when there are no routes found
     if distance_df.empty:
         routes_found = []
+    #Handles the case when there are routes found
     else:
         found = True
+        #Calls the function to retrieve all the calculations necessary to be displayed
         routes_found = all_calculations(distance_df)
+    #String to display the full route
     route = str(starting_country).title() + temp + temp_two
     return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
+#This view function handles the 'all routes within a given range' tool
 def routes(request):
+    #Load the entire dataset from distance.csv file
     df = pd.read_csv('https://raw.githubusercontent.com/salam-karadsheh/BLT/master/distances.csv')
     df['Distance'] = df['Distance'].astype(int)
+    #Get all the unique origins for the dropdown search bar options
     all_countries = df['From'].unique()
     all_countries.sort()
+    
+    #Request handling
     country_from = request.GET.get('country_from')
     within_range = request.GET.get('within_range')
+    
+    #This boolean variable is True if any results were found and False otherwise
     found = False
     temp = ""
+    
+    #Handles the case when the range is not specified
     if (within_range == "") | (within_range == None):
         distance_df = df[(df['From'].str.contains(str(country_from), case = False))].sort_values('Distance')
+    #Handles the case when the range is specified
     else: 
         distance_df = df[(df['From'].str.contains(str(country_from), case = False)) & (df['Distance'] <= float(within_range))].sort_values('Distance')
+        #String to display the specified range
         temp = " within " + str(within_range) + " NM"
+    
+    #Handles the case when there are no routes found
     if distance_df.empty:
         routes_found = []
+    #Handles the case when there are routes found
     else:
         found = True
         routes_found = distance_df.values.tolist
+    #String to display the full route
     route = str(country_from).title() + temp
     return render(request, 'routes.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
+#This helper function handles all the calculations needed to be displayed
 def all_calculations(df_temp):
     new_list = []    
-
+    #Iterate through each row in the specified dataset
     for index, row in df_temp.iterrows():
+        #String to display the route on each button
         route = str(row['From']) + " - " + str(row['To'])
+        #Gets the route distance
         distance = row['Distance']
+        
+        #######################################
+        #Port-to-Port Transit Time Calculations
         remaining_distance = distance
         ptp_time = 0.0
-        #Port-to-Port transit time handling
         #Routes involving Singapore should take into account speed limit of 12 knots for 7 NM
         if (row['From'] == 'Singapore') | (row['To'] == 'Singapore'):
+            #Total distance for complying with the speed limit (NM)
             speed_limit_distance = 7.0
+            #Speed limit (knots)
             speed_limit = 12.0
-            ptp_time = ptp_time + round((speed_limit_distance / speed_limit), 1)
+            #Factoring in the time under which the vessel must comply with speed limit
+            ptp_time = ptp_time + (speed_limit_distance / speed_limit)
             remaining_distance = remaining_distance - speed_limit_distance
+            #Factoring in the transit time for the remaining distance on routes over [150 NM]
             if distance >= 150:
+                #Total distance for which the vessel is going at a slow speed (NM)
                 slow_distance = 3.0
+                #Slow speed (knots)
                 slow_speed = 5.0
-                ptp_time = ptp_time + round((slow_distance / slow_speed), 1)
+                ptp_time = ptp_time + (slow_distance / slow_speed)
                 remaining_distance = remaining_distance - slow_distance
+            #Factoring in the transit time for the remaining distance on routes under [150 NM]
             else:
+                #Total distance for which the vessel is going at a slow speed (NM)
                 slow_distance = 1.5
+                #Slow speed (knots)
                 slow_speed = 5.0
-                ptp_time = ptp_time + round((slow_distance / slow_speed), 1)
+                ptp_time = ptp_time + (slow_distance / slow_speed)
                 remaining_distance = remaining_distance - slow_distance
         #Routes not involving Singapore
         else: 
+            #Routes over [150 NM]
             if distance >= 150:
+                #Total distance for which the vessel is going at a slow speed (NM) (twice that of earlier)
                 slow_distance = 3.0 * 2.0
+                #Slow speed (knots)
                 slow_speed = 5.0
-                ptp_time = ptp_time + round((slow_distance / slow_speed), 1)
+                ptp_time = ptp_time + (slow_distance / slow_speed)
                 remaining_distance = remaining_distance - slow_distance
             else:
+                #Total distance for which the vessel is going at a slow speed (NM) (twice that of earlier)
                 slow_distance = 1.5 * 2.0
+                #Slow speed (knots)
                 slow_speed = 5.0
-                ptp_time = ptp_time + round((slow_distance / slow_speed), 1)
+                ptp_time = ptp_time + (slow_distance / slow_speed)
                 remaining_distance = remaining_distance - slow_distance
-        ptp_time = ptp_time + round((remaining_distance / 40.0), 1)
-        #Door-to-Door transit time handling
+        #Vessel travels at a speed of [40.0 knots] for the remaining distance of the trip
+        ptp_time = ptp_time + (remaining_distance / 40.0)
+        
+        #######################################
+        #Door-to-Door Transit Time Calculations
         dtd_time = 0.0
+        #Number of containers loaded and unloaded from vessel
         num_containers_loaded = 20
         num_containers_unloaded = 20
-        #mins
+        #Docking time (mins)
         docking = 20
-        #mins
+        #Undocking time (mins)
         undocking = 20
-        #mins
+        #Time needed to load one container (mins)
         load_one_container = 1.5
-        #mins
+        #Time needed to unload one container (mins)
         unload_one_container = 1.5
-        #mins
+        #Total time taken to load all the containers (mins)
         loading = num_containers_loaded * load_one_container
-        #mins
+        #Total time taken to unload all the containers (mins)
         unloading = num_containers_unloaded * unload_one_container
-        #trucking
+        #Trucking time to port (hrs)
         to_port = 3
+        #Trucking time from port (hrs)
         from_port = 3
-        #wait time at port
+        #Additional wait time at ports (hrs)
         port_wait = 2.5
-        dtd_time = ((loading + unloading + docking + undocking) / 60.0) + ptp_time + to_port + from_port + port_wait
+        
+        #Final calculation
+        dtd_time = ((loading + unloading + docking + undocking) / 60.0) + ptp_time + to_port + from_port + (port_wait * 2.0)
         
         #Turn transit times into days
-        ptp_time = ptp_time / 24.0
-        dtd_time = dtd_time / 24.0
+        ptp_time_days = ptp_time / 24.0
+        dtd_time_days = dtd_time / 24.0
 
-        #######
-        #Fuel consumption per day in kgs
-        fuel_consumption_per_day = 15000.0
-        #fuel consumption per trip in kgs
-        fuel_consumption = fuel_consumption_per_day * ptp_time
-        #15 tons a day - 24 hours
+        ##############################
+        #Fuel Consumption Calculations
+        fuel_consumption = 0.0
+        #Fuel consumption per day (tons)
+        fuel_consumption_per_day = 15.0
+        #Total fuel consumption per trip (tons)
+        fuel_consumption = fuel_consumption_per_day * ptp_time_days
 
-        #######
-        #price of hydrogen per kg
-        h2_price_per_kg = 4.0
-        variable_cost = h2_price_per_kg * fuel_consumption
-        #place holder
-        fixed_cost = 1000.0
-        #in kgs
+        #####################################
+        #ARGO Freight Cost/Price Calculations
+        #Price of hydrogen per ton ($ / ton)
+        h2_price_per_ton = 4000.0
+        #Fixed cost per trip accounting for crew salaries, depreciation... ($)
+        fixed_cost_per_trip = (3500000.0 / 300.0 / 24.0) * ((ptp_time + 6.0))
+        #Fuel cost per trip ($)
+        fuel_costs = h2_price_per_ton * fuel_consumption
+        #Cargo handling costs ($)
+        cargo_handling = 4000.0
+        #Port costs ($)
+        port_costs = 1000.0
+        #Payload (kg)
         payload = 200000.0
-        cost_per_kg = (variable_cost + fixed_cost) / payload
-        price_margin = 0.4
-        price_per_kg = cost_per_kg * (1 + price_margin)
+        
+        #ARGO freight cost per kg ($ / kg)
+        freight_cost_per_kg = (fixed_cost_per_trip + fuel_costs + cargo_handling + port_costs) / payload
+        
+        #ARGO freight price per kg ($ / kg)
+        freight_price_per_kg = cost_per_kg * (0.6)
 
         #Formatting
         fuel_consumption = int(fuel_consumption)
         cost_per_kg = round(cost_per_kg, 2)
         price_per_kg = round(price_per_kg, 2)
-        if ptp_time > 1.0:
-            ptp_time = str(round(ptp_time, 1)) + " Days"
+        #Displaying transit time in days vs hours
+        if ptp_time_days > 1.0:
+            ptp_time = str(round(ptp_time_days, 1)) + " Days"
         else:
-            ptp_time = str(round(ptp_time * 24.0, 1)) + " Hours"
-        if dtd_time > 1.0:
-            dtd_time = str(round(dtd_time, 1)) + " Days"
+            ptp_time = str(round(ptp_time, 1)) + " Hours"
+        if dtd_time_days > 1.0:
+            dtd_time = str(round(dtd_time_days, 1)) + " Days"
         else:
-            dtd_time = str(round(dtd_time * 24.0, 1 )) + " Hours"
+            dtd_time = str(round(dtd_time, 1 )) + " Hours"
 
-        new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, cost_per_kg, price_per_kg])
+        new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, freight_cost_per_kg, freight_price_per_kg])
     return new_list
