@@ -56,6 +56,9 @@
     {% if found %}
     <br>
         <h3>Routes from {{route}}</h3>
+        {% if volume %}
+            <h3>{{freight_input}}</h3>
+        {% endif %}
             <br>
             {% for value in routes_found %}
             <div class="container">
