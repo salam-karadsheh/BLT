@@ -45,9 +45,9 @@
             <br>
             <br>
             <tr>
-                <input class="form-control-three" type="search" pattern="\d*" placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
-                <input class="form-control-three" type="search" pattern="\d*" placeholder="Air Freight Rate ($/kg) - Optional"  name="air_freight_rate" size="30" >
-                <input class="form-control-three" type="search" pattern="\d*" placeholder="Freight Volume (tons) - Optional"  name="freight_volume" size="30" >
+                <input class="form-control-three" type="number" min = 0 placeholder="Within the Range (NM) - Optional"  name="within_range" size="30" >
+                <input class="form-control-three" type="number" min = 0 step = 0.1 placeholder="Air Freight Rate ($/kg) - Optional"  name="air_freight_rate" size="30" >
+                <input class="form-control-three" type="number" min = 0 placeholder="Freight Volume (tons) - Optional"  name="freight_volume" size="30" >
             </tr>
             <button class="primary" type="submit">Search</button>
         </form>
