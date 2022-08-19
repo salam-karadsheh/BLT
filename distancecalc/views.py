@@ -53,6 +53,8 @@ def search_intra_asia(request):
         #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
     
+    freight_input = ""
+    
     #Handles the case when the freight volume is not specified
     if (freight_volume == "") | (freight_volume == None):
         volume = False
@@ -77,13 +79,15 @@ def search_intra_asia(request):
         if volume:
             if air:
                 routes_found = all_calculations(distance_df, float(air_freight_rate), float(freight_volume))
+                freight_input = "Freight Volume is " + str(freight_volume) + " (tons) and Air Freight Rate is " + str(air_freight_rate) + " ($/kg)"
             else:
                 routes_found = all_calculations(distance_df, None, float(freight_volume))
+                freight_input = "Freight Volume is " + str(freight_volume) + " (tons)"
         else:
             routes_found = all_calculations(distance_df, None, None)
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
-    return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume})
+    return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume, 'freight_input' : freight_input})
 
 #This view function handles all the routes
 def search_global(request):
@@ -152,6 +156,8 @@ def search_global(request):
         #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
     
+    freight_input = ""
+    
     #Handles the case when the freight volume is not specified
     if (freight_volume == "") | (freight_volume == None):
         volume = False
@@ -176,13 +182,15 @@ def search_global(request):
         if volume:
             if air:
                 routes_found = all_calculations(distance_df, float(air_freight_rate), float(freight_volume))
+                freight_input = "Freight Volume is " + str(freight_volume) + " (tons) and Air Freight Rate is " + str(air_freight_rate) + " ($/kg)"
             else:
                 routes_found = all_calculations(distance_df, None, float(freight_volume))
+                freight_input = "Freight Volume is " + str(freight_volume) + " (tons)"
         else:
             routes_found = all_calculations(distance_df, None, None)
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
-    return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume})
+    return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume, 'freight_input' : freight_input})
 
 #This view function handles the 'all routes within a given range' tool
 def routes(request):
