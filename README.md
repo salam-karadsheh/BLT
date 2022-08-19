@@ -9,3 +9,6 @@ Instructions for how to navigate the web application are provided below:
 - Tool #3 "Routes within a Range": Provides a list of available routes from a specified origin point with the option to filter routes within a certain range. Simply type in the origin point and click search to display a table of all the routes starting from this origin point including their distances. 
 
 Assumptions: 
+- Breakdown of Port-to-Port transit time calculation:
+  - All routes involving Singapore must take into account the 12 knots speed limit for 7 NM within the Singaporean Strait.
+  - All routes must take into account 'slow speed zones' in which the vessel travels at an average speed of [5] knots
