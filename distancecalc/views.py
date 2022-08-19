@@ -290,7 +290,7 @@ def all_calculations(df_temp):
         freight_price_per_kg = freight_cost_per_kg / 0.6
 
         #Formatting
-        fuel_consumption = int(fuel_consumption)
+        fuel_consumption = round(fuel_consumption, 1)
         freight_cost_per_kg = round(freight_cost_per_kg, 2)
         freight_price_per_kg = round(freight_price_per_kg, 2)
         #Displaying transit time in days vs hours
