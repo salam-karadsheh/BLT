@@ -18,6 +18,12 @@ def search_intra_asia(request):
     starting_country = request.GET.get('starting_country')
     ending_country = request.GET.get('ending_country')
     within_range = request.GET.get('within_range')
+    air_freight_rate = request.GET.get('air_freight_rate')
+    freight_volume = request.GET.get('freight_volume')
+    
+    #Case when no input is provided
+    if ((ending_country == "") | (ending_country == None)) & ((starting_country == "") | (starting_country == None)):
+        return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : [], 'found' : False, 'route' : ""})
     
     #This boolean variable is True if any results were found and False otherwise
     found = False
@@ -47,17 +53,37 @@ def search_intra_asia(request):
         #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
     
+    #Handles the case when the freight volume is not specified
+    if (freight_volume == "") | (freight_volume == None):
+        volume = False
+    #Handles the case when the freight volume is specified
+    else: 
+        volume = True
+        
+    #Handles the case when the air freight rate is not specified
+    if (air_freight_rate == "") | (air_freight_rate == None):
+        air = False
+    #Handles the case when the air freight rate is not specified
+    else:
+        air = True
+    
     #Handles the case when there are no routes found
     if distance_df.empty:
         routes_found = []
     #Handles the case when there are routes found
     else:
         found = True
-        #Calls the function to retrieve all the calculations necessary to be displayed
-        routes_found = all_calculations(distance_df)
+        #Calls the function to retrieve all the calculations necessary to be displayed based on inputs
+        if volume:
+            if air:
+                routes_found = all_calculations(distance_df, float(air_freight_rate), float(freight_volume))
+            else:
+                routes_found = all_calculations(distance_df, None, float(freight_volume))
+        else:
+            routes_found = all_calculations(distance_df, None, None)
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
-    return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
+    return render(request, 'asia.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume})
 
 #This view function handles all the routes
 def search_global(request):
@@ -91,6 +117,12 @@ def search_global(request):
     starting_country = request.GET.get('starting_country')
     ending_country = request.GET.get('ending_country')
     within_range = request.GET.get('within_range')
+    air_freight_rate = request.GET.get('air_freight_rate')
+    freight_volume = request.GET.get('freight_volume')
+    
+    #Case when no input is provided
+    if ((ending_country == "") | (ending_country == None)) & ((starting_country == "") | (starting_country == None)):
+        return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : [], 'found' : False, 'route' : ""})
     
     #This boolean variable is True if any results were found and False otherwise
     found = False
@@ -120,17 +152,37 @@ def search_global(request):
         #String to display the specified Ending Country
         temp = " to " + str(ending_country).title()
     
+    #Handles the case when the freight volume is not specified
+    if (freight_volume == "") | (freight_volume == None):
+        volume = False
+    #Handles the case when the freight volume is specified
+    else: 
+        volume = True
+        
+    #Handles the case when the air freight rate is not specified
+    if (air_freight_rate == "") | (air_freight_rate == None):
+        air = False
+    #Handles the case when the air freight rate is not specified
+    else:
+        air = True
+    
     #Handles the case when there are no routes found
     if distance_df.empty:
         routes_found = []
     #Handles the case when there are routes found
     else:
         found = True
-        #Calls the function to retrieve all the calculations necessary to be displayed
-        routes_found = all_calculations(distance_df)
+        #Calls the function to retrieve all the calculations necessary to be displayed based on inputs
+        if volume:
+            if air:
+                routes_found = all_calculations(distance_df, float(air_freight_rate), float(freight_volume))
+            else:
+                routes_found = all_calculations(distance_df, None, float(freight_volume))
+        else:
+            routes_found = all_calculations(distance_df, None, None)
     #String to display the full route
     route = str(starting_country).title() + temp + temp_two
-    return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
+    return render(request, 'global.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route, 'air' : air, 'volume' : volume})
 
 #This view function handles the 'all routes within a given range' tool
 def routes(request):
@@ -144,6 +196,10 @@ def routes(request):
     #Request handling
     country_from = request.GET.get('country_from')
     within_range = request.GET.get('within_range')
+    
+    #Case when no input is provided
+    if ((country_from == "") | (country_from == None)):
+        return render(request, 'routes.html', {'countries' : all_countries, 'routes_found' : [], 'found' : False, 'route' : ""})
     
     #This boolean variable is True if any results were found and False otherwise
     found = False
@@ -170,7 +226,7 @@ def routes(request):
     return render(request, 'routes.html', {'countries' : all_countries, 'routes_found' : routes_found, 'found' : found, 'route' : route})
 
 #This helper function handles all the calculations needed to be displayed
-def all_calculations(df_temp):
+def all_calculations(df_temp, air_freight_rate, freight_volume):
     new_list = []    
     #Iterate through each row in the specified dataset
     for index, row in df_temp.iterrows():
@@ -288,7 +344,22 @@ def all_calculations(df_temp):
         
         #ARGO freight price per kg ($ / kg)
         freight_price_per_kg = freight_cost_per_kg / 0.6
+        
+        #Boolean variables to denote whether the freight savings and emissions savings are calculated
+        air = False
+        volume = True
 
+        if freight_volume != None:
+            volume = True
+            #Calculates emissions savings 
+            emissions_savings = 600 * distance * 1.852 * freight_volume / 1000000
+            emissions_savings = round(emissions_savings, 1)
+            if air_freight_rate != None:
+                air = True
+                #Calculates freight savings
+                freight_savings = (air_freight_rate - freight_price_per_kg) * freight_volume * 1000
+                freight_savings = int(freight_savings)
+        
         #Formatting
         fuel_consumption = round(fuel_consumption, 1)
         freight_cost_per_kg = round(freight_cost_per_kg, 2)
@@ -302,6 +373,13 @@ def all_calculations(df_temp):
             dtd_time = str(round(dtd_time_days, 1)) + " Days"
         else:
             dtd_time = str(round(dtd_time, 1 )) + " Hours"
-
-        new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, freight_cost_per_kg, freight_price_per_kg])
+        
+        #Append to the list
+        if volume:
+            if air:
+                new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, freight_cost_per_kg, freight_price_per_kg, emissions_savings, freight_savings])
+            else:
+                new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, freight_cost_per_kg, freight_price_per_kg, emissions_savings])
+        else:
+            new_list.append([route, distance, ptp_time, dtd_time, fuel_consumption, freight_cost_per_kg, freight_price_per_kg])
     return new_list
