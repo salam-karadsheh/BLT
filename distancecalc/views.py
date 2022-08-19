@@ -359,6 +359,8 @@ def all_calculations(df_temp, air_freight_rate, freight_volume):
                 #Calculates freight savings
                 freight_savings = (air_freight_rate - freight_price_per_kg) * freight_volume * 1000
                 freight_savings = int(freight_savings)
+                #Formatting
+                freight_savings = "{:,}".format(freight_savings)
         
         #Formatting
         fuel_consumption = round(fuel_consumption, 1)
